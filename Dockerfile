@@ -3,7 +3,6 @@ FROM ubuntu:20.04
 ARG TARGETARCH=amd64
 ARG AGENT_VERSION=2.185.1
 
-
 # To make it easier for build and release pipelines to run apt-get,
 # configure apt to not require confirmation (assume the -y argument by default)
 ENV DEBIAN_FRONTEND=noninteractive

@@ -1,9 +1,17 @@
-$AZ_BUILD_AGENT = [System.Environment]::GetEnvironmentVariable("AZ_BUILD_AGENT","User") # build agent token
-$AZ_DEVOPS_URL = [System.Environment]::GetEnvironmentVariable("AZ_DEVOPS_URL","User") # https://dev.azure.com/your-org-name
-$AZ_DEVOPS_AGENT_POOL = "Unraid"
+# azure devops url and auth token
+$AZP_URL = [System.Environment]::GetEnvironmentVariable("AZP_DEVOPS_URL","User") # https://dev.azure.com/your-org-name
+$AZP_DEVOPS_AGENT_TOKEN = [System.Environment]::GetEnvironmentVariable("AZP_DEVOPS_AGENT_TOKEN","User") # build agent token
 
-Write-Host "Starting ADO Agent: $AZ_DEVOPS_URL"
-Write-Host "Azure DevOps Token: $AZ_BUILD_AGENT"
+# agent name & pool
+$AZP_AGENT_NAME = "dockeragent-01"
+$AZP_AGENT_POOL = "Unraid"
 
+# output
+Write-Host "Starting ADO Agent: $AZP_URL"
+Write-Host "Azure DevOps Token: $AZP_DEVOPS_AGENT_TOKEN"
+
+# remove previous agent if needed.
 docker rm -f azure-build-agent
-docker run --name azure-build-agent -e AZP_URL=$AZ_DEVOPS_URL -e AZP_TOKEN=$AZ_BUILD_AGENT -e AZP_AGENT_NAME=dockeragent-01 -e AZP_POOL=$AZ_DEVOPS_AGENT_POOL mrjamiebowman/azure-build-agent:latest
+
+# docker run
+docker run --name azure-build-agent -e AZP_URL=$AZP_URL -e AZP_TOKEN=$AZP_DEVOPS_AGENT_TOKEN -e AZP_AGENT_NAME=$AZP_AGENT_NAME -e AZP_POOL=$AZP_AGENT_POOL mrjamiebowman/azure-build-agent:latest
