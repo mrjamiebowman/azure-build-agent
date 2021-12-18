@@ -4,6 +4,7 @@ ARG TARGETARCH=amd64
 ARG AGENT_VERSION=2.185.1
 
 ARG GO_VERSION=1.17.5
+ARG PACKER_VERSION=
 
 # To make it easier for build and release pipelines to run apt-get,
 # configure apt to not require confirmation (assume the -y argument by default)
@@ -84,6 +85,9 @@ RUN apt update
 #RUN install ansible
 
 # packer
+RUN curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -
+RUN apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+RUN apt-get update && apt-get install packer
 
 # # agent
 # WORKDIR /azp
