@@ -4,7 +4,6 @@ ARG TARGETARCH=amd64
 ARG AGENT_VERSION=2.185.1
 
 ARG GO_VERSION=1.17.5
-ARG PACKER_VERSION=
 
 # To make it easier for build and release pipelines to run apt-get,
 # configure apt to not require confirmation (assume the -y argument by default)
@@ -81,25 +80,24 @@ RUN chmod 700 get_helm.sh && ./get_helm.sh
 
 # ansible
 RUN add-apt-repository --yes --update ppa:ansible/ansible
-RUN apt update
-#RUN install ansible
+RUN apt update && apt install ansible
 
 # packer
 RUN curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -
 RUN apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
 RUN apt-get update && apt-get install packer
 
-# # agent
-# WORKDIR /azp
+# agent
+WORKDIR /azp
 
-# RUN if [ "$TARGETARCH" = "amd64" ]; then \
-#       AZP_AGENTPACKAGE_URL=https://vstsagentpackage.azureedge.net/agent/${AGENT_VERSION}/vsts-agent-linux-x64-${AGENT_VERSION}.tar.gz; \
-#     else \
-#       AZP_AGENTPACKAGE_URL=https://vstsagentpackage.azureedge.net/agent/${AGENT_VERSION}/vsts-agent-linux-${TARGETARCH}-${AGENT_VERSION}.tar.gz; \
-#     fi; \
-#     curl -LsS "$AZP_AGENTPACKAGE_URL" | tar -xz
+RUN if [ "$TARGETARCH" = "amd64" ]; then \
+      AZP_AGENTPACKAGE_URL=https://vstsagentpackage.azureedge.net/agent/${AGENT_VERSION}/vsts-agent-linux-x64-${AGENT_VERSION}.tar.gz; \
+    else \
+      AZP_AGENTPACKAGE_URL=https://vstsagentpackage.azureedge.net/agent/${AGENT_VERSION}/vsts-agent-linux-${TARGETARCH}-${AGENT_VERSION}.tar.gz; \
+    fi; \
+    curl -LsS "$AZP_AGENTPACKAGE_URL" | tar -xz
 
-# COPY ./start.sh .
-# RUN chmod +x start.sh
+COPY ./start.sh .
+RUN chmod +x start.sh
 
-# ENTRYPOINT [ "./start.sh" ]
+ENTRYPOINT [ "./start.sh" ]
