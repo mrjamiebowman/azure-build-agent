@@ -42,14 +42,10 @@ RUN curl -sL https://packages.microsoft.com/keys/microsoft.asc | \
     gpg --dearmor | \
     tee /etc/apt/trusted.gpg.d/microsoft.gpg > /dev/null
 
-RUN echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $(lsb_release -cs) main" | \
-    tee /etc/apt/sources.list.d/azure-cli.list
+# RUN echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $(lsb_release -cs) main" | \
+#     tee /etc/apt/sources.list.d/azure-cli.list
 
 RUN apt-get update && apt-get install azure-cli -y
-
-# azure cli extensions
-RUN az extension add --name azure-firewall
-RUN az extension add --name k8s-extension
 
 # .net core
 RUN wget https://packages.microsoft.com/config/ubuntu/21.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
