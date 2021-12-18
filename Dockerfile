@@ -3,6 +3,8 @@ FROM ubuntu:20.04
 ARG TARGETARCH=amd64
 ARG AGENT_VERSION=2.185.1
 
+ARG GO_VERSION=1.17.5
+
 # To make it easier for build and release pipelines to run apt-get,
 # configure apt to not require confirmation (assume the -y argument by default)
 ENV DEBIAN_FRONTEND=noninteractive
@@ -33,8 +35,7 @@ RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /
 RUN echo \
   "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
   $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
-RUN apt-get update
-RUN apt-get install docker-ce docker-ce-cli containerd.io
+RUN apt-get update && apt-get install docker-ce docker-ce-cli containerd.io
 
 # azure cli
 RUN curl -sL https://packages.microsoft.com/keys/microsoft.asc | \
@@ -44,13 +45,13 @@ RUN curl -sL https://packages.microsoft.com/keys/microsoft.asc | \
 RUN echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $(lsb_release -cs) main" | \
     tee /etc/apt/sources.list.d/azure-cli.list
 
-# RUN apt-get install azure-cli -y
+RUN apt-get update && apt-get install azure-cli -y
 
-# install terraform
-COPY terraform.sh .
-RUN ./terraform.sh
+# azure cli extensions
+RUN az extension add --name azure-firewall
+RUN az extension add --name k8s-extension
 
-# install .net core
+# .net core
 RUN wget https://packages.microsoft.com/config/ubuntu/21.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
 RUN dpkg -i packages-microsoft-prod.deb
 RUN rm packages-microsoft-prod.deb
@@ -59,6 +60,30 @@ RUN apt-get update; \
   apt-get install -y apt-transport-https && \
   apt-get update && \
   apt-get install -y dotnet-sdk-6.0
+
+# install go
+RUN wget -O go${GO_VERSION}.linux-amd64.tar.gz https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz
+RUN rm -rf /usr/local/go && tar -C /usr/local -xzf go${GO_VERSION}.linux-amd64.tar.gz
+RUN export PATH=$PATH:/usr/local/go/bin
+
+# terraform
+COPY terraform.sh .
+RUN ./terraform.sh
+
+# kubectl
+RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+RUN install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+# helm
+RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+RUN chmod 700 get_helm.sh && ./get_helm.sh
+
+# ansible
+RUN add-apt-repository --yes --update ppa:ansible/ansible
+RUN apt update
+#RUN install ansible
+
+# packer
 
 # # agent
 # WORKDIR /azp
