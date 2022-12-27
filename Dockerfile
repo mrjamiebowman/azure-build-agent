@@ -55,16 +55,16 @@ RUN rm packages-microsoft-prod.deb
 RUN apt-get update; \
   apt-get install -y apt-transport-https && \
   apt-get update && \
-  apt-get install -y dotnet-sdk-6.0
+  apt-get install -y dotnet-sdk-7.0
 
 # install go
 RUN wget -O go${GO_VERSION}.linux-amd64.tar.gz https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz
 RUN rm -rf /usr/local/go && tar -C /usr/local -xzf go${GO_VERSION}.linux-amd64.tar.gz
 RUN export PATH=$PATH:/usr/local/go/bin
 
-# terraform
-COPY terraform.sh .
-RUN ./terraform.sh
+# # terraform
+# COPY terraform.sh .
+# RUN ./terraform.sh
 
 # kubectl
 RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
