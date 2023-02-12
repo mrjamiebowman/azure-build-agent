@@ -93,7 +93,8 @@ RUN if [ "$TARGETARCH" = "amd64" ]; then \
     fi; \
     curl -LsS "$AZP_AGENTPACKAGE_URL" | tar -xz
 
-COPY ./start.sh .
-RUN chmod +x start.sh
+# start
+COPY start.sh /
+RUN chmod +x /start.sh
 
-ENTRYPOINT [ "./start.sh" ]
+ENTRYPOINT [ "/start.sh" ]
