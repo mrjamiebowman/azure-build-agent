@@ -14,4 +14,4 @@ Write-Host "Azure DevOps Token: $AZP_DEVOPS_AGENT_TOKEN"
 docker rm -f azure-build-agent
 
 # docker run
-docker run --name azure-build-agent -e AZP_URL=$AZP_URL -e AZP_TOKEN=$AZP_DEVOPS_AGENT_TOKEN -e AZP_AGENT_NAME=$AZP_AGENT_NAME -e AZP_POOL=$AZP_AGENT_POOL mrjamiebowman/azure-build-agent:latest
+docker run -v ./logs:/azp/_diag/ --name azure-build-agent -e AZP_URL=$AZP_URL -e AZP_TOKEN=$AZP_DEVOPS_AGENT_TOKEN -e AZP_AGENT_NAME=$AZP_AGENT_NAME -e AZP_POOL=$AZP_AGENT_POOL mrjamiebowman/azure-build-agent:latest
