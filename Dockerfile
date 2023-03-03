@@ -1,9 +1,8 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 ARG TARGETARCH=amd64
-ARG AGENT_VERSION=2.185.1
-
-ARG GO_VERSION=1.17.5
+ARG GO_VERSION=1.20.1
+ARG AGENT_VERSION=3.217.1
 
 # To make it easier for build and release pipelines to run apt-get,
 # configure apt to not require confirmation (assume the -y argument by default)
@@ -38,17 +37,10 @@ RUN echo \
 RUN apt-get update && apt-get install docker-ce docker-ce-cli containerd.io
 
 # azure cli
-RUN curl -sL https://packages.microsoft.com/keys/microsoft.asc | \
-    gpg --dearmor | \
-    tee /etc/apt/trusted.gpg.d/microsoft.gpg > /dev/null
-
-# RUN echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $(lsb_release -cs) main" | \
-#     tee /etc/apt/sources.list.d/azure-cli.list
-
-RUN apt-get update && apt-get install azure-cli -y
+RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 
 # .net core
-RUN wget https://packages.microsoft.com/config/ubuntu/21.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+RUN wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
 RUN dpkg -i packages-microsoft-prod.deb
 RUN rm packages-microsoft-prod.deb
 
@@ -62,9 +54,9 @@ RUN wget -O go${GO_VERSION}.linux-amd64.tar.gz https://go.dev/dl/go${GO_VERSION}
 RUN rm -rf /usr/local/go && tar -C /usr/local -xzf go${GO_VERSION}.linux-amd64.tar.gz
 RUN export PATH=$PATH:/usr/local/go/bin
 
-# # terraform
-# COPY terraform.sh .
-# RUN ./terraform.sh
+# terraform
+COPY terraform.sh .
+RUN ./terraform.sh
 
 # kubectl
 RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
