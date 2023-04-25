@@ -2,7 +2,7 @@ FROM ubuntu:22.04
 
 ARG TARGETARCH=amd64
 ARG GO_VERSION=1.20.1
-ARG AGENT_VERSION=3.217.1
+ARG AGENT_VERSION=3.218.0
 
 # To make it easier for build and release pipelines to run apt-get,
 # configure apt to not require confirmation (assume the -y argument by default)
@@ -13,6 +13,7 @@ RUN apt-get update && apt-get install -y \
     --no-install-recommends \
     ca-certificates \
     curl \
+    dos2unix \
     jq \
     git \
     libcurl4 \
@@ -93,6 +94,7 @@ RUN if [ "$TARGETARCH" = "amd64" ]; then \
 
 # start
 COPY start.sh .
+RUN dos2unix start.sh
 RUN chmod +x start.sh
 
 ENTRYPOINT [ "/azp/start.sh" ]
