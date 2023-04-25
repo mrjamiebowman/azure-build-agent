@@ -1,5 +1,9 @@
 # Azure Build Agent
-Dockerized Azure Build Agent with .NET 6, Terraform, and Ansible.
+Dockerized Azure Build Agent with .NET 7, Terraform, Packer, and Ansible.
+
+#### Additional Tools 
+* jinja cli
+* whois / mkpasswd
 
 ### Microsoft Docs
 [https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/docker?view=azure-devops](https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/docker?view=azure-devops)
