@@ -109,4 +109,7 @@ COPY start.sh .
 RUN dos2unix start.sh
 RUN chmod +x start.sh
 
+# set up user
+# TODO
+
 ENTRYPOINT [ "/azp/start.sh" ]
