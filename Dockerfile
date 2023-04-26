@@ -11,11 +11,13 @@ RUN echo "APT::Get::Assume-Yes \"true\";" > /etc/apt/apt.conf.d/90assumeyes
 
 RUN apt-get update && apt-get install -y \
     --no-install-recommends \
+    build-essential \
     ca-certificates \
     curl \
     dos2unix \
     jq \
     git \
+    gcc \
     libcurl4 \
     netcat \
     libssl1.0 \
@@ -91,6 +93,16 @@ RUN if [ "$TARGETARCH" = "amd64" ]; then \
       AZP_AGENTPACKAGE_URL=https://vstsagentpackage.azureedge.net/agent/${AGENT_VERSION}/vsts-agent-linux-${TARGETARCH}-${AGENT_VERSION}.tar.gz; \
     fi; \
     curl -LsS "$AZP_AGENTPACKAGE_URL" | tar -xz
+
+# qemu
+RUN apt install -y qemu-kvm libvirt-clients libvirt-daemon-system bridge-utils virtinst libvirt-daemon
+RUN apt install virt-manager -y
+
+# RUN systemctl enable --now libvirtd
+# RUN systemctl start libvirtd
+
+# RUN usermod -aG kvm $USER
+# RUN usermod -aG libvirt $USER
 
 # start
 COPY start.sh .
