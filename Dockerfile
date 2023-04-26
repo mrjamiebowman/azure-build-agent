@@ -30,7 +30,6 @@ RUN apt-get update && apt-get install -y \
     gnupg \
     lsb-release \
     whois \
-    open-vm-tools \
   && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /root
@@ -94,16 +93,6 @@ RUN if [ "$TARGETARCH" = "amd64" ]; then \
       AZP_AGENTPACKAGE_URL=https://vstsagentpackage.azureedge.net/agent/${AGENT_VERSION}/vsts-agent-linux-${TARGETARCH}-${AGENT_VERSION}.tar.gz; \
     fi; \
     curl -LsS "$AZP_AGENTPACKAGE_URL" | tar -xz
-
-# qemu
-RUN apt install -y qemu-kvm libvirt-clients libvirt-daemon-system bridge-utils virtinst libvirt-daemon
-RUN apt install virt-manager -y
-
-# RUN systemctl enable --now libvirtd
-# RUN systemctl start libvirtd
-
-# RUN usermod -aG kvm $USER
-# RUN usermod -aG libvirt $USER
 
 # argocd
 RUN mkdir -p /install
