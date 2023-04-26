@@ -104,7 +104,15 @@ RUN apt install virt-manager -y
 # RUN usermod -aG kvm $USER
 # RUN usermod -aG libvirt $USER
 
+# argocd
+RUN mkdir -p /install
+WORKDIR /install
+RUN curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+RUN install -m 555 argocd-linux-amd64 /usr/local/bin/argocd
+RUN rm argocd-linux-amd64
+
 # start
+WORKDIR /azp
 COPY start.sh .
 RUN dos2unix start.sh
 RUN chmod +x start.sh
