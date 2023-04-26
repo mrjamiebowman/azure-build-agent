@@ -30,6 +30,7 @@ RUN apt-get update && apt-get install -y \
     gnupg \
     lsb-release \
     whois \
+    open-vm-tools \
   && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /root

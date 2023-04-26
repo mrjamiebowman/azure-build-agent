@@ -3,7 +3,7 @@ $AZP_URL = [System.Environment]::GetEnvironmentVariable("AZP_DEVOPS_URL","User")
 $AZP_DEVOPS_AGENT_TOKEN = [System.Environment]::GetEnvironmentVariable("AZP_DEVOPS_AGENT_TOKEN","User") # build agent token
 
 # agent name & pool
-$AZP_AGENT_NAME = "dockeragent-01"
+$AZP_AGENT_NAME = "dockeragent-02"
 $AZP_AGENT_POOL = "Unraid"
 
 # output
