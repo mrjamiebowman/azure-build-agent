@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:kinetic
 
 ARG TARGETARCH=amd64
 ARG GO_VERSION=1.20.1
