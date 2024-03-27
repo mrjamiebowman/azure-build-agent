@@ -1,7 +1,9 @@
+# https://learn.microsoft.com/en-us/azure/devops/pipelines/agents/docker?view=azure-devops
+
 FROM ubuntu:22.04
 
 ARG TARGETARCH=amd64
-ARG GO_VERSION=1.20.1
+ARG GO_VERSION=1.22.1
 ARG AGENT_VERSION=3.217.1
 
 # To make it easier for build and release pipelines to run apt-get,
@@ -19,7 +21,6 @@ RUN apt-get update && apt-get install -y \
     git \
     gcc \
     libcurl4 \
-    netcat \
     libssl1.0 \
     apt-transport-https \
     python3-pip \
@@ -30,12 +31,13 @@ RUN apt-get update && apt-get install -y \
     gnupg \
     lsb-release \
     whois \
+    zlib1g \
   && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /root
 
-# jinjacli
-RUN pip install jinja-cli
+# # jinjacli
+# RUN pip install jinja-cli
 
 # install docker
 RUN apt install apt-transport-https ca-certificates curl software-properties-common
@@ -56,7 +58,7 @@ RUN rm packages-microsoft-prod.deb
 RUN apt-get update; \
   apt-get install -y apt-transport-https && \
   apt-get update && \
-  apt-get install -y dotnet-sdk-7.0
+  apt-get install -y dotnet-sdk-8.0
 
 # install go
 RUN wget -O go${GO_VERSION}.linux-amd64.tar.gz https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz
