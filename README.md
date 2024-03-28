@@ -5,6 +5,7 @@ Dockerized Azure Build Agent with .NET 8/9 Preview, Terraform, Packer, and Ansib
 
 #### Additional Tools 
 * az cli
+* github cli
 * terraform
 * helm
 * packer

@@ -31,6 +31,7 @@ RUN apt-get update && apt-get install -y \
     lsb-release \
     whois \
     zlib1g \
+    gh \
   && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /root
