@@ -25,6 +25,12 @@ There are environment variables in the `start.sh` script that need to be passed 
 `AZP_AGENT_NAME`  
 `AZP_POOL`  
 
+#### Docker Pull
+`docker pull ghcr.io/mrjamiebowman/azure-build-agent:main`   
+
+#### Docker Run
+`docker run -v ${PWD}/logs/:/azp/_diag --name azure-build-agent -e AZP_URL=[#url] -e AZP_TOKEN=$[#your azure token] -e AZP_AGENT_NAME=[#agent_name] -e AZP_POOL=[#pool] ghcr.io/mrjamiebowman/azure-build-agent:main`   
+
 ## Running Locally (Windows)
 You can run this locally on Windows by setting these environment variables and running the `run.ps1` script.
 
