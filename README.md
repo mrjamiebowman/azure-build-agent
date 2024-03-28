@@ -1,7 +1,13 @@
 # Azure Build Agent
-Dockerized Azure Build Agent with .NET 7, Terraform, Packer, and Ansible.
+Dockerized Azure Build Agent with .NET 8/9 Preview, Terraform, Packer, and Ansible.
+
+[![Docker Image CI](https://github.com/mrjamiebowman/azure-build-agent/actions/workflows/docker-image.yml/badge.svg?branch=main)](https://github.com/mrjamiebowman/azure-build-agent/actions/workflows/docker-image.yml)
 
 #### Additional Tools 
+* az cli
+* terraform
+* helm
+* packer
 * jinja cli
 * whois / mkpasswd
 
