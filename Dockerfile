@@ -1,7 +1,5 @@
 # https://learn.microsoft.com/en-us/azure/devops/pipelines/agents/docker?view=azure-devops
-
-#FROM ubuntu:22.04
-FROM mcr.microsoft.com/dotnet/sdk:9.0.100-preview.2-jammy-amd64
+FROM mcr.microsoft.com/dotnet/sdk:9.0.100-preview.2-jammy
 
 ARG TARGETARCH=amd64
 ARG GO_VERSION=1.22.1
