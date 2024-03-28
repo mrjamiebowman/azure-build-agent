@@ -103,7 +103,7 @@ RUN curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases
 RUN install -m 555 argocd-linux-amd64 /usr/local/bin/argocd
 RUN rm argocd-linux-amd64
 
-# jinjacli
+# jinja cli
 RUN pip install jinja-cli
 
 # start
