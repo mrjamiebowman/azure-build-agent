@@ -25,6 +25,9 @@ There are environment variables in the `start.sh` script that need to be passed 
 `AZP_AGENT_NAME`  
 `AZP_POOL`  
 
+### Docker Login GitHub
+`gh auth token | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password-stdin`   
+
 #### Docker Pull
 `docker pull ghcr.io/mrjamiebowman/azure-build-agent:main`   
 
