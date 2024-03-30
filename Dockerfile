@@ -1,5 +1,6 @@
 # https://learn.microsoft.com/en-us/azure/devops/pipelines/agents/docker?view=azure-devops
-FROM ubuntu:22.04
+# FROM ubuntu:22.04
+FROM mcr.microsoft.com/dotnet/sdk:9.0.100-preview.2-jammy
 
 # also can be "linux-arm", "linux-arm64".
 ARG TARGETARCH="linux-x64"
@@ -48,7 +49,7 @@ RUN apt update
 RUN apt-cache policy docker-ce
 RUN apt install docker-ce
 
-# .net core
+# .net 8
 RUN wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
 RUN dpkg -i packages-microsoft-prod.deb
 RUN rm packages-microsoft-prod.deb
@@ -57,6 +58,10 @@ RUN apt-get update; \
   apt-get install -y apt-transport-https && \
   apt-get update && \
   apt-get install -y dotnet-sdk-8.0
+
+# .net preview
+RUN curl -L https://aka.ms/install-dotnet-preview -o install-dotnet-preview.sh
+RUN bash install-dotnet-preview.sh
 
 # install go
 RUN wget -O go${GO_VERSION}.linux-amd64.tar.gz https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz
@@ -96,6 +101,9 @@ WORKDIR /install
 RUN curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
 RUN install -m 555 argocd-linux-amd64 /usr/local/bin/argocd
 RUN rm argocd-linux-amd64
+
+# jinjacli
+RUN pip install jinja-cli
 
 # start
 WORKDIR /azp
