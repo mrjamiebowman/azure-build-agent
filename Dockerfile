@@ -2,7 +2,6 @@
 FROM ubuntu:22.04
 
 # also can be "linux-arm", "linux-arm64".
-ARG TARGETARCH="linux-x64"
 ARG GO_VERSION=1.22.1
 ARG AGENT_VERSION=3.217.1
 
@@ -10,6 +9,8 @@ ARG AGENT_VERSION=3.217.1
 # configure apt to not require confirmation (assume the -y argument by default)
 ENV DEBIAN_FRONTEND=noninteractive
 RUN echo "APT::Get::Assume-Yes \"true\";" > /etc/apt/apt.conf.d/90assumeyes
+
+ENV TARGETARCH="linux-x64"
 
 RUN apt-get update && apt-get install -y \
     --no-install-recommends \
@@ -56,7 +57,7 @@ RUN rm packages-microsoft-prod.deb
 RUN apt-get update; \
   apt-get install -y apt-transport-https && \
   apt-get update && \
-  apt-get install -y dotnet-sdk-8.0
+  apt-get install -y dotnet-sdk-8.0  
 
 # .net preview
 RUN curl -L https://aka.ms/install-dotnet-preview -o install-dotnet-preview.sh
@@ -88,12 +89,6 @@ RUN curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -
 RUN apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
 RUN apt-get update && apt-get install packer
 
-# jinja cli
-RUN pip install jinja-cli
-
-# agent
-WORKDIR /azp
-
 # argocd
 RUN mkdir -p /install
 WORKDIR /install
@@ -104,23 +99,17 @@ RUN rm argocd-linux-amd64
 # jinjacli
 RUN pip install jinja-cli
 
-# start
-WORKDIR /azp
-COPY start.sh .
-RUN dos2unix start.sh
-RUN chmod +x start.sh
+WORKDIR /azp/
 
-# create agent user and set up home directory
+COPY ./start.sh ./
+RUN chmod +x ./start.sh
+
+# Create agent user and set up home directory
 RUN useradd -m -d /home/agent agent
 RUN chown -R agent:agent /azp /home/agent
 
-# USER agent
-# another option is to run the agent as root.
+USER agent
+# Another option is to run the agent as root.
 # ENV AGENT_ALLOW_RUNASROOT="true"
 
-ENV AGENT_ALLOW_RUNASROOT="true"
-USER root
-
-RUN export COMPlus_EnableDiagnostics = 0
-
-ENTRYPOINT [ "/azp/start.sh" ]
+ENTRYPOINT ./start.sh
