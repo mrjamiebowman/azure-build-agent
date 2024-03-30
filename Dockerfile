@@ -1,6 +1,5 @@
 # https://learn.microsoft.com/en-us/azure/devops/pipelines/agents/docker?view=azure-devops
-# FROM ubuntu:22.04
-FROM mcr.microsoft.com/dotnet/sdk:9.0.100-preview.2-jammy
+FROM ubuntu:22.04
 
 # also can be "linux-arm", "linux-arm64".
 ARG TARGETARCH="linux-x64"
@@ -115,8 +114,13 @@ RUN chmod +x start.sh
 RUN useradd -m -d /home/agent agent
 RUN chown -R agent:agent /azp /home/agent
 
-USER agent
+# USER agent
 # another option is to run the agent as root.
 # ENV AGENT_ALLOW_RUNASROOT="true"
+
+ENV AGENT_ALLOW_RUNASROOT="true"
+USER root
+
+RUN export COMPlus_EnableDiagnostics = 0
 
 ENTRYPOINT [ "/azp/start.sh" ]

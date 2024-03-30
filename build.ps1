@@ -1,7 +1,10 @@
 Clear-Host
 
+$VERSION = "latest"
+
 # fix formatting issues
+dos2unix start.sh
 dos2unix terraform.sh
 
 # --no-cache
-docker build --progress=plain -t mrjamiebowman/azure-build-agent:latest .
+docker build -f Dockerfile.plain -t mrjamiebowman/azure-build-agent:$VERSION .
