@@ -44,5 +44,5 @@ You can run this locally on Windows by setting these environment variables and r
 
 Manually set the `AZP_AGENT_NAME` and `AZP_AGENT_POOL` with the appropriate agent name and agent pool. For mine, I used `dockeragent-01` and `Unraid`.  
 
-## VMWare Builds (Packer)
+## VMware Builds (Packer)
 [https://www.vmware.com/go/getworkstation-linux](https://www.vmware.com/go/getworkstation-linux)   
