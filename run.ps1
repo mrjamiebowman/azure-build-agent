@@ -1,7 +1,7 @@
 Clear-Host
 
 # vars
-$VERSION = "plain"
+$VERSION = "latest"
 $AZP_AGENT_NAME = "dockeragent-02"
 $AZP_AGENT_POOL = "Unraid"
 
