@@ -1,3 +1,5 @@
+Clear-Host
+
 # azure devops url and auth token
 $AZP_URL = [System.Environment]::GetEnvironmentVariable("AZP_DEVOPS_URL","User") # https://dev.azure.com/your-org-name
 $AZP_DEVOPS_AGENT_TOKEN = [System.Environment]::GetEnvironmentVariable("AZP_DEVOPS_AGENT_TOKEN","User") # build agent token

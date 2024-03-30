@@ -1,8 +1,8 @@
 # https://learn.microsoft.com/en-us/azure/devops/pipelines/agents/docker?view=azure-devops
-
 FROM ubuntu:22.04
 
-ARG TARGETARCH=amd64
+# also can be "linux-arm", "linux-arm64".
+ARG TARGETARCH="linux-x64"
 ARG GO_VERSION=1.22.1
 ARG AGENT_VERSION=3.217.1
 
@@ -21,6 +21,7 @@ RUN apt-get update && apt-get install -y \
     git \
     gcc \
     libcurl4 \
+    libicu70 \
     libssl1.0 \
     apt-transport-https \
     python3-pip \
@@ -35,9 +36,6 @@ RUN apt-get update && apt-get install -y \
   && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /root
-
-# # jinjacli
-# RUN pip install jinja-cli
 
 # install docker
 RUN apt install apt-transport-https ca-certificates curl software-properties-common
@@ -86,15 +84,11 @@ RUN curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -
 RUN apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
 RUN apt-get update && apt-get install packer
 
+# jinja cli
+RUN pip install jinja-cli
+
 # agent
 WORKDIR /azp
-
-RUN if [ "$TARGETARCH" = "amd64" ]; then \
-      AZP_AGENTPACKAGE_URL=https://vstsagentpackage.azureedge.net/agent/${AGENT_VERSION}/vsts-agent-linux-x64-${AGENT_VERSION}.tar.gz; \
-    else \
-      AZP_AGENTPACKAGE_URL=https://vstsagentpackage.azureedge.net/agent/${AGENT_VERSION}/vsts-agent-linux-${TARGETARCH}-${AGENT_VERSION}.tar.gz; \
-    fi; \
-    curl -LsS "$AZP_AGENTPACKAGE_URL" | tar -xz
 
 # argocd
 RUN mkdir -p /install
@@ -109,7 +103,12 @@ COPY start.sh .
 RUN dos2unix start.sh
 RUN chmod +x start.sh
 
-# set up user
-# TODO
+# create agent user and set up home directory
+RUN useradd -m -d /home/agent agent
+RUN chown -R agent:agent /azp /home/agent
+
+USER agent
+# another option is to run the agent as root.
+# ENV AGENT_ALLOW_RUNASROOT="true"
 
 ENTRYPOINT [ "/azp/start.sh" ]
