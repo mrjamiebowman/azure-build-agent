@@ -17,9 +17,10 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     ca-certificates \
     curl \
-    dos2unix \
+    dos2unix \    
     jq \
     git \
+    gnupg \
     gcc \
     libcurl4 \
     libicu70 \
@@ -62,6 +63,11 @@ RUN apt-get update; \
 # .net preview
 RUN curl -L https://aka.ms/install-dotnet-preview -o install-dotnet-preview.sh
 RUN bash install-dotnet-preview.sh
+
+# install mono c#
+RUN gpg --homedir /tmp --no-default-keyring --keyring /usr/share/keyrings/mono-official-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+RUN echo "deb [signed-by=/usr/share/keyrings/mono-official-archive-keyring.gpg] https://download.mono-project.com/repo/ubuntu stable-focal main" | tee /etc/apt/sources.list.d/mono-official-stable.list
+RUN apt update
 
 # install go
 RUN wget -O go${GO_VERSION}.linux-amd64.tar.gz https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz
